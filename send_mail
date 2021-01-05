@@ -1,0 +1,37 @@
+import smtplib
+import requests
+from email.mime.text import MIMEText
+from email.header import Header
+mailhost = 'smtp.qq.com'
+sender = '774135735@qq.com'
+password = 'hzkfvlxnaugxbfic'
+receiver = ['xs@tofsq.com', '1914297430@qq.com', '317846732@qq.com']
+content = '网页重新上线'
+subjuet = '报警'
+
+
+def sendmail():
+    url = 'https://utopia.best/'
+    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36 QIHU 360SE'}
+    while True:
+        try:
+            r = requests.get(url, headers=headers, timeout=5)
+            st_code = r.status_code
+            if st_code == 200:
+                qqmail = smtplib.SMTP()
+                qqmail.connect(mailhost, 25)
+                qqmail.login(sender, password)
+                message = MIMEText(content, 'plain', 'utf-8')
+                message['Subject'] = Header(subjuet, 'utf-8')
+                try:
+                    qqmail.sendmail(sender, receiver, message.as_string())
+                    print("邮件发送成功")
+                except:
+                    print('邮件发送失败')
+                qqmail.quit()
+                break
+        except:
+            pass
+
+if __name__ == '__main__':
+    sendmail()
